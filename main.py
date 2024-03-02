@@ -24,15 +24,13 @@ img = cv2.imread('photo.jpg')
 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 show_image(img, 'Image')
 
-full_intencity = (img - img.min()) / (img.max() - img.min()) * 255
-show_image(full_intencity, 'Full intencity')
-# img = (img - img.min()) / (img.max() - img.min()) * 255
-#При полной интенсивности фильтр повышения резкости плохо работает
+img = (img - img.min()) / (img.max() - img.min()) * 255
+img = np.uint8(img)
 
-show_hist(np.uint8(img))
+show_hist(img)
 
 s_p = salt_pepper(img, 0.01)
-show_image(np.uint8(s_p), 'Salt&Pepper')
+show_image(s_p, 'Salt&Pepper')
 
 blur = cv2.blur(s_p, (3, 3))
 show_image(blur, 'Blur filter')
@@ -42,7 +40,7 @@ sharp_matr = np.array([
     [-2, 22, -2],
     [-1, -2, -1]
 ])
-sharp = cv2.filter2D(blur, -1, sharp_matr / 10)
+sharp = cv2.filter2D(blur, -1, sharp_matr / np.sum(sharp_matr))
 show_image(sharp, 'Sharp filter')
 
 median = cv2.medianBlur(np.uint8(s_p), 3)
